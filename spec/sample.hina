@@ -1,0 +1,38 @@
+// プロトタイプ宣言
+fn puts(ptr c) -> i32;
+fn printInt(i64 c) -> i32;
+
+// 再帰を用いた階乗
+fn fact_r(i64 n) -> i64 {
+    i64 result = 0;
+    if n > 0 {
+        result = n * fact_r(n - 1);
+    }
+    else {
+        result = 1;
+    }
+    return result;
+}
+
+// ループを用いた階乗
+fn fact_l(i64 n) -> i64 {
+    i64 result = 1;
+    i64 i = 1;
+    while i <= n {
+        result = result * i;
+        i = i + 1;
+    }
+    return result;
+}
+
+fn main() -> i64 {
+    puts("Factorial");
+
+    // 10! = 3628800
+    printInt(fact_r(10));
+    puts("");
+    printInt(fact_l(10));
+    puts("");
+
+    return 0;
+}
