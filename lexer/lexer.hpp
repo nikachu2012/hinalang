@@ -17,7 +17,7 @@ public:
     {
         END = -1,
         KEYWORD,
-        DIGIT,
+        NUMBER,
         STRING,
         OPERATOR,
         COMMA,         // ,
