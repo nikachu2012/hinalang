@@ -9,6 +9,27 @@ lexer::~lexer()
 }
 
 lexer::LEXER_TYPE lexer::lex()
-{ 
+{
+    char c;
+
+next:
+    if (fs.eof() || fs.fail())
+    {
+        return LEXER_TYPE::END;
+    }
+
+    switch (c)
+    {
+    case ' ':
+    case '\t':
+    case '\n':
+        // ホワイトスペースの無視
+        goto next;
+        break;
+
+    default:
+        break;
+    }
+
     return LEXER_TYPE::END;
 }
