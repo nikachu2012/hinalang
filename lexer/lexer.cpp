@@ -11,6 +11,7 @@ lexer::~lexer()
 lexer::LEXER_TYPE lexer::lex()
 {
     char c;
+    buf = "";
 
 next:
     c = read();
