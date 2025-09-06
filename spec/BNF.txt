@@ -1,0 +1,37 @@
+program = [ statement ]*
+
+declare-argument = ε
+                 | keyword keyword [ "," keyword keyword ]*
+
+block = "{" [ statement ]* "}"
+
+statement = expr ";"
+          | "if" expr block
+          | "if" expr block "else" block
+          | "while" expr block
+          | "return" [ expr ] ";"
+          | function-define
+
+function-define = "fn" keyword "(" declare-argument ")" "->" keyword ";"
+                | "fn" keyword "(" declare-argument ")" "->" keyword block
+
+expr1 = expr2 [ condition-operator expr2 ]*
+expr2 = expr3 [ { "<<" | ">>" } expr3 ]*
+expr3 = expr4 [ { "+" | "-" } expr4 ]*
+expr4 = factor [ { "*" | "/" | "%" } factor ]*
+factor = number
+       | keyword
+       | """ string """
+       | keyword "(" argument-list ")"
+       | keyword keyword "=" expr1
+       | keyword "=" expr1
+       | "(" expr1 ")"
+
+number = /[0-9]*/
+keyword = /[A-Za-z_][0-9A-Za-z_]*/
+string = /.*/
+
+condition-operator = "<" | "<=" | ">" | ">=" | "==" | "!="
+
+argument-list = ε
+              | expr1 [ "," expr1 ]*
