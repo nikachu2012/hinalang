@@ -12,6 +12,8 @@ private:
     char read() { return fs.get(); }
     void pb() { fs.unget(); }
 
+    static inline bool isDecimal(char c);
+
 public:
     enum class LEXER_TYPE
     {
