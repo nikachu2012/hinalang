@@ -40,6 +40,37 @@ next:
         goto next;
         break;
 
+    case '/':
+        c = read();
+        if (c == '/')
+        {
+            // １行コメント
+            while ((read()) != '\n')
+                ;
+            goto next;
+        }
+        else if (c == '*')
+        {
+            // 複数行コメント
+            while (true)
+            {
+                while ((read()) != '*')
+                    ;
+                if (read() == '/') // */が来た時
+                    break;
+                else // *が来ても*/でなければ読み続ける
+                    continue;
+            }
+            goto next;
+        }
+        else
+        {
+            // 除算演算子
+            pb();
+            // あとで実装
+        }
+        break;
+
     case '0':
     case '1':
     case '2':
