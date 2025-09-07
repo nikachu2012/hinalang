@@ -13,7 +13,8 @@ lexer::LEXER_TYPE lexer::lex()
     char c;
 
 next:
-    if (fs.eof() || fs.fail())
+    c = read();
+    if (fs.eof() || fs.fail()) // 読んでからEOFチェック
     {
         return LEXER_TYPE::END;
     }
