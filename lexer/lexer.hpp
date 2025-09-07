@@ -3,6 +3,8 @@
 
 #include <fstream>
 #include <string>
+#include "../error/error.hpp"
+
 class lexer
 {
 private:
@@ -13,6 +15,7 @@ private:
     void pb() { fs.unget(); }
 
     static inline bool isDecimal(char c);
+    static inline bool isKeyword(char c);
 
 public:
     enum class LEXER_TYPE
