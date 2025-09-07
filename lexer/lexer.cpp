@@ -5,6 +5,12 @@ inline bool lexer::isDecimal(char c)
     return '0' <= c && c <= '9';
 }
 
+inline bool lexer::isKeyword(char c)
+{
+    return ('0' <= c && c <= '9') || ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || ('_' == c) ||
+           (0x80 <= (unsigned char)c && (unsigned char)c <= 0xff);
+}
+
 lexer::lexer(std::ifstream &f) : fs(f)
 {
 }
@@ -55,6 +61,20 @@ next:
         break;
 
     default:
+        if (isKeyword(c))
+        {
+            buf += c;
+            while (isKeyword((c = read())))
+            {
+                buf += c;
+            }
+            pb();
+            return LEXER_TYPE::KEYWORD;
+        }
+        else
+        {
+            Error::err("Undefined char '%c'", c);
+        }
         break;
     }
 
