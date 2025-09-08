@@ -67,8 +67,18 @@ next:
         {
             // 除算演算子
             pb();
-            // あとで実装
+            buf += '/';
+            return LEXER_TYPE::OPERATOR;
         }
+        break;
+    
+    case '+':
+    case '-':
+    case '*':
+    case '%':
+        // 加減乗と剰余演算子
+        buf += c;
+        return LEXER_TYPE::OPERATOR;
         break;
 
     case '0':
