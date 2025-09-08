@@ -71,7 +71,7 @@ next:
             return LEXER_TYPE::OPERATOR;
         }
         break;
-    
+
     case '+':
     case '-':
     case '*':
@@ -79,6 +79,40 @@ next:
         // 加減乗と剰余演算子
         buf += c;
         return LEXER_TYPE::OPERATOR;
+        break;
+
+    case '>':
+        c = read();
+        if (c == '>')
+        {
+            // 右シフト演算子
+            buf = ">>";
+            return LEXER_TYPE::OPERATOR;
+        }
+        else
+        {
+            // 大なり演算子
+            pb();
+            buf = ">";
+            return LEXER_TYPE::OPERATOR;
+        }
+        break;
+
+    case '<':
+        c = read();
+        if (c == '<')
+        {
+            // 右シフト演算子
+            buf = "<<";
+            return LEXER_TYPE::OPERATOR;
+        }
+        else
+        {
+            // 小なり演算子
+            pb();
+            buf = "<";
+            return LEXER_TYPE::OPERATOR;
+        }
         break;
 
     case '0':
