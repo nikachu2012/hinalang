@@ -89,6 +89,12 @@ next:
             buf = ">>";
             return LEXER_TYPE::OPERATOR;
         }
+        else if (c == '=')
+        {
+            // 大なりイコール演算子
+            buf = ">=";
+            return LEXER_TYPE::OPERATOR;
+        }
         else
         {
             // 大なり演算子
@@ -104,6 +110,12 @@ next:
         {
             // 右シフト演算子
             buf = "<<";
+            return LEXER_TYPE::OPERATOR;
+        }
+        else if (c == '=')
+        {
+            // 小なりイコール演算子
+            buf = "<=";
             return LEXER_TYPE::OPERATOR;
         }
         else
