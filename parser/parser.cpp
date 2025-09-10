@@ -1,5 +1,21 @@
 #include "parser.hpp"
 
+BaseAST *parser::parseExpr1()
+{
+    BaseAST *lhs = parseExpr2();
+
+    // 仮でそのまま返すようにする
+    return lhs;
+}
+
+BaseAST *parser::parseExpr2()
+{
+    BaseAST *lhs = parseExpr3();
+
+    // 仮でそのまま返すようにする
+    return lhs;
+}
+
 // expr3 = expr4 [ { "+" | "-" } expr4 ]*
 BaseAST *parser::parseExpr3()
 {
@@ -76,6 +92,18 @@ BaseAST *parser::parseFactor()
     if (factor == lexer::LEXER_TYPE::NUMBER)
     {
         return new ImmediateIntAST(lex.getBuf());
+    }
+    else if (factor == lexer::LEXER_TYPE::LEFT_BRACKET)
+    {
+        BaseAST *expr = parseExpr1();
+
+        factor = lex.lex();
+        if (factor != lexer::LEXER_TYPE::RIGHT_BRACKET)
+        {
+            Error::err("Expected ')'");
+        }
+
+        return expr;
     }
     else
     {
