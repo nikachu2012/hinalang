@@ -73,12 +73,27 @@ next:
         break;
 
     case '+':
-    case '-':
     case '*':
     case '%':
-        // 加減乗と剰余演算子
+        // 加乗と剰余演算子
         buf += c;
         return LEXER_TYPE::OPERATOR;
+        break;
+
+    case '-':
+        c = read();
+        if (c == '>')
+        {
+            // 右矢印演算子
+            buf = "->";
+            return LEXER_TYPE::RIGHT_ARROW;
+        }
+        else
+        {
+            pb();
+            buf = "-";
+            return LEXER_TYPE::OPERATOR;
+        }
         break;
 
     case '>':
