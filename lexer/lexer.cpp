@@ -19,8 +19,16 @@ lexer::~lexer()
 {
 }
 
+void lexer::pbToken()
+{
+    fs.seekg(prev_pos);
+}
+
 lexer::LEXER_TYPE lexer::lex()
 {
+    // 1トークン読む前の位置を保存
+    prev_pos = fs.tellg();
+
     char c;
     buf = "";
 

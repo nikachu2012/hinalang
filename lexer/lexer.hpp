@@ -9,6 +9,7 @@ class lexer
 {
 private:
     std::ifstream &fs;
+    std::streampos prev_pos;
     std::string buf;
 
     char read() { return fs.get(); }
@@ -38,6 +39,7 @@ public:
     ~lexer();
     LEXER_TYPE lex();
     std::string getBuf() { return buf; }
+    void pbToken();
 };
 
 #endif
