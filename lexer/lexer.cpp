@@ -224,6 +224,42 @@ next:
         return LEXER_TYPE::NUMBER;
         break;
 
+    case '"':
+        // 文字列 簡易版
+        // while ((c=read()) != '"')
+        // {
+        //     buf += c;
+        // }
+        // return LEXER_TYPE::STRING;
+        // break;
+
+        // 文字列 エスケープシーケンスに対応
+        while (true)
+        {
+            c = read();
+
+            if (c == '\\')
+            {
+                buf += c;
+                // バックスラッシュの次を読む
+                buf += read();
+            }
+            else if (c == '"')
+            {
+                break;
+            }
+            else if (fs.eof())
+            {
+                Error::err("\" is required.");
+            }
+            else
+            {
+                buf += c;
+            }
+        }
+        return LEXER_TYPE::STRING;
+        break;
+
     default:
         if (isKeyword(c))
         {
