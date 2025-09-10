@@ -127,6 +127,37 @@ next:
         }
         break;
 
+    case '=':
+        c = read();
+        if (c == '=')
+        {
+            // 等価演算子
+            buf = "==";
+            return LEXER_TYPE::OPERATOR;
+        }
+        else
+        {
+            // 代入
+            pb();
+            buf = "=";
+            return LEXER_TYPE::OPERATOR;
+        }
+        break;
+
+    case '!':
+        c = read();
+        if (c == '=')
+        {
+            // 非等価演算子
+            buf = "!=";
+            return LEXER_TYPE::OPERATOR;
+        }
+        else{
+            pb();
+            buf = "!";
+            return LEXER_TYPE::OPERATOR;
+        }
+
     case '0':
     case '1':
     case '2':
