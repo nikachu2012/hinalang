@@ -152,11 +152,42 @@ next:
             buf = "!=";
             return LEXER_TYPE::OPERATOR;
         }
-        else{
+        else
+        {
             pb();
             buf = "!";
             return LEXER_TYPE::OPERATOR;
         }
+
+    case ',':
+        buf = c;
+        return LEXER_TYPE::COMMA;
+        break;
+
+    case '(':
+        buf = c;
+        return LEXER_TYPE::LEFT_BRACKET;
+        break;
+
+    case ')':
+        buf = c;
+        return LEXER_TYPE::RIGHT_BRACKET;
+        break;
+
+    case '{':
+        buf = c;
+        return LEXER_TYPE::LEFT_BRACE;
+        break;
+
+    case '}':
+        buf = c;
+        return LEXER_TYPE::RIGHT_BRACE;
+        break;
+
+    case ';':
+        buf = c;
+        return LEXER_TYPE::SEMICOLON;
+        break;
 
     case '0':
     case '1':
