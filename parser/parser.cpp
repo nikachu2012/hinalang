@@ -1,0 +1,94 @@
+#include "parser.hpp"
+
+// expr3 = expr4 [ { "+" | "-" } expr4 ]*
+BaseAST *parser::parseExpr3()
+{
+    BaseAST *lhs = parseExpr4();
+
+    while (true)
+    {
+        // expr3 = expr4 [ { "+" | "-" } expr4 ]*
+        //     この部分を解析 ^^^^^^^^^^^^^
+        lexer::LEXER_TYPE op = lex.lex();
+
+        // expr4の後に演算子が来ない=演算式ではない
+        if (op != lexer::LEXER_TYPE::OPERATOR)
+        {
+            // 1個先読みして違かったので戻す
+            lex.pbToken();
+            return lhs;
+        }
+
+        std::string opVal = lex.getBuf();
+        if (opVal == "+" || opVal == "-")
+        {
+            // expr4の後に + または - が来る場合
+            BaseAST *rhs = parseExpr4();
+            lhs = new EquationAST(lhs, rhs, opVal);
+
+            continue;
+        }
+        else
+        {
+            lex.pbToken();
+            return lhs;
+        }
+    }
+}
+
+// expr4 = factor [ { "*" | "/" | "%" } factor ]*
+BaseAST *parser::parseExpr4()
+{
+    BaseAST *lhs = parseFactor();
+
+    while (true)
+    {
+        lexer::LEXER_TYPE op = lex.lex();
+
+        if (op != lexer::LEXER_TYPE::OPERATOR)
+        {
+            lex.pbToken();
+
+            return lhs;
+        }
+
+        std::string opVal = lex.getBuf();
+        if (opVal == "*" || opVal == "/" || opVal == "%")
+        {
+
+            BaseAST *rhs = parseFactor();
+            lhs = new EquationAST(lhs, rhs, opVal);
+
+            continue;
+        }
+        else
+        {
+            lex.pbToken();
+            return lhs;
+        }
+    }
+}
+
+BaseAST *parser::parseFactor()
+{
+    lexer::LEXER_TYPE factor = lex.lex();
+
+    if (factor == lexer::LEXER_TYPE::NUMBER)
+    {
+        return new ImmediateIntAST(lex.getBuf());
+    }
+    else
+    {
+        Error::err("Invalid syntax. (lexer: %d, buf: %s)", factor, lex.getBuf().c_str());
+    }
+
+    return new BaseAST();
+}
+
+void parser::parseProgram()
+{
+    BaseAST *program = parseExpr3();
+
+    // program.dump(0);
+    program->dump(0);
+}
