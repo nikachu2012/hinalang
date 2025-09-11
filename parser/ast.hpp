@@ -59,4 +59,26 @@ public:
 
     void dump(const int indentcount);
 };
+
+class VariableAST : public BaseAST
+{
+public:
+    std::string name;
+
+    VariableAST(std::string n) : name(n) {}
+    ~VariableAST() {}
+
+    void dump(const int indentcount);
+};
+
+class ImmediateStringAST : public BaseAST
+{
+public:
+    std::string value;
+
+    ImmediateStringAST(std::string val) : value(val) {}
+    ~ImmediateStringAST() {}
+
+    void dump(const int indentcount);
+};
 #endif
