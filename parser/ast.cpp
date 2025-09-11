@@ -35,3 +35,23 @@ void ImmediateStringAST::dump(const int indentcount)
 {
     printf("ImmediateString(value: \"%s\")\n", value.c_str());
 }
+
+void DefineVariableAST::dump(const int indentcount)
+{
+    printf("DefineVariable(type: %s, dest: %s\n", type.c_str(), dest.c_str());
+    indent(indentcount + 1);
+    printf("value: ");
+    value->dump(indentcount + 1);
+    indent(indentcount);
+    puts(")");
+}
+
+void AssignAST::dump(const int indentcount)
+{
+    printf("Assign(dest: %s\n", dest.c_str());
+    indent(indentcount + 1);
+    printf("value: ");
+    value->dump(indentcount + 1);
+    indent(indentcount);
+    puts(")");
+}
