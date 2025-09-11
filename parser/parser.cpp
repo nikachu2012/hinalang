@@ -95,7 +95,37 @@ BaseAST *parser::parseFactor()
     }
     else if (factor == lexer::LEXER_TYPE::KEYWORD)
     {
-        return new VariableAST(lex.getBuf());
+        std::string tempName = lex.getBuf();
+
+        // 一つ先を読む
+        factor = lex.lex();
+        if (factor == lexer::LEXER_TYPE::KEYWORD)
+        {
+            std::string variableName = lex.getBuf();
+
+            // keyword keyword "=" expr1
+            //         ここを解析 ^^^
+            factor = lex.lex();
+            if (factor == lexer::LEXER_TYPE::OPERATOR && lex.getBuf() == "=")
+            {
+                BaseAST *value = parseExpr1();
+                return new DefineVariableAST(tempName, variableName, value);
+            }
+            else
+            {
+                Error::err("Expected '='");
+            }
+        }
+        else if (factor == lexer::LEXER_TYPE::OPERATOR && lex.getBuf() == "=")
+        {
+            BaseAST *value = parseExpr1();
+            return new AssignAST(tempName, value);
+        }
+        else
+        {
+            lex.pbToken();
+            return new VariableAST(tempName);
+        }
     }
     else if (factor == lexer::LEXER_TYPE::STRING)
     {
