@@ -25,3 +25,13 @@ void ImmediateIntAST::dump(const int indentcount)
 {
     printf("ImmediateInt(value: %s)\n", value.c_str());
 }
+
+void VariableAST::dump(const int indentcount)
+{
+    printf("Variable(name: %s)\n", name.c_str());
+}
+
+void ImmediateStringAST::dump(const int indentcount)
+{
+    printf("ImmediateString(value: \"%s\")\n", value.c_str());
+}

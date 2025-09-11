@@ -93,6 +93,14 @@ BaseAST *parser::parseFactor()
     {
         return new ImmediateIntAST(lex.getBuf());
     }
+    else if (factor == lexer::LEXER_TYPE::KEYWORD)
+    {
+        return new VariableAST(lex.getBuf());
+    }
+    else if (factor == lexer::LEXER_TYPE::STRING)
+    {
+        return new ImmediateStringAST(lex.getBuf());
+    }
     else if (factor == lexer::LEXER_TYPE::LEFT_BRACKET)
     {
         BaseAST *expr = parseExpr1();
