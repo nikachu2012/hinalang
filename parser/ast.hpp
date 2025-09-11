@@ -81,4 +81,41 @@ public:
 
     void dump(const int indentcount);
 };
+
+/**
+ * @brief 変数定義のAST
+ */
+class DefineVariableAST : public BaseAST
+{
+public:
+    std::string type;
+    std::string dest;
+    BaseAST *value;
+
+    DefineVariableAST(std::string type, std::string dest, BaseAST *val) : type(type), dest(dest), value(val) {}
+    ~DefineVariableAST()
+    {
+        delete value;
+    }
+
+    void dump(const int indentcount);
+};
+
+/**
+ * @brief 変数代入のAST
+ */
+class AssignAST : public BaseAST
+{
+public:
+    std::string dest;
+    BaseAST *value;
+
+    AssignAST(std::string dest, BaseAST *val) : dest(dest), value(val) {}
+    ~AssignAST()
+    {
+        delete value;
+    }
+
+    void dump(const int indentcount);
+};
 #endif
