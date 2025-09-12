@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "../error/error.hpp"
 #include "../lexer/lexer.hpp"
