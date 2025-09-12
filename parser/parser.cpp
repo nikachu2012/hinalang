@@ -25,6 +25,21 @@ BaseStatementAST *parser::parseStatement()
     if (tempLex == lexer::LEXER_TYPE::KEYWORD && lex.getBuf() == "if")
     {
         // if statement
+        BaseAST *condition = parseExpr1();
+        BlockAST *block = parseBlock();
+
+        tempLex = lex.lex();
+        if (tempLex == lexer::LEXER_TYPE::KEYWORD && lex.getBuf() == "else")
+        {
+            BlockAST *elseBlock = parseBlock();
+            return new IfStatementAST(condition, block, elseBlock);
+        }
+        else
+        {
+            lex.pbToken();
+            BlockAST *elseBlock = new BlockAST({});
+            return new IfStatementAST(condition, block, elseBlock);
+        }
     }
     else if (tempLex == lexer::LEXER_TYPE::KEYWORD && lex.getBuf() == "while")
     {
