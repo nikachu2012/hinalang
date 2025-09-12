@@ -82,3 +82,15 @@ void ExprStatementAST::dump(const int indentcount)
 {
     expr->dump(indentcount);
 }
+
+void BlockAST::dump(int indentcount)
+{
+    printf("Block: [\n");
+    for (auto &&i : statements)
+    {
+        indent(indentcount + 1);
+        i->dump(indentcount + 1);
+    }
+    indent(indentcount);
+    puts("]");
+}

@@ -1,5 +1,23 @@
 #include "parser.hpp"
 
+BlockAST *parser::parseBlock()
+{
+    if (lex.lex() != lexer::LEXER_TYPE::LEFT_BRACE)
+    {
+        Error::err("Expected '{'.");
+    }
+
+    std::vector<BaseStatementAST *> statements;
+
+    while (lex.lex() != lexer::LEXER_TYPE::RIGHT_BRACE)
+    {
+        lex.pbToken();
+        statements.push_back(parseStatement());
+    }
+
+    return new BlockAST(statements);
+}
+
 BaseStatementAST *parser::parseStatement()
 {
     lexer::LEXER_TYPE tempLex = lex.lex();
@@ -275,7 +293,7 @@ void parser::parseProgram()
     while (lex.lex() != lexer::LEXER_TYPE::END)
     {
         lex.pbToken();
-        
+
         parseStatement()->dump(0);
     }
 }
