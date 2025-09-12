@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <string>
 #include <typeinfo>
+#include <vector>
 
 #include "../error/error.hpp"
 
@@ -114,6 +115,24 @@ public:
     ~AssignAST()
     {
         delete value;
+    }
+
+    void dump(const int indentcount);
+};
+
+class FunctionCallAST : public BaseAST
+{
+public:
+    std::string name;
+    std::vector<BaseAST *> args;
+
+    FunctionCallAST(std::string name, std::vector<BaseAST *> args) : name(name), args(args) {}
+    ~FunctionCallAST()
+    {
+        for (auto &&i : args)
+        {
+            delete i;
+        }
     }
 
     void dump(const int indentcount);

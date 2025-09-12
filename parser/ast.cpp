@@ -55,3 +55,20 @@ void AssignAST::dump(const int indentcount)
     indent(indentcount);
     puts(")");
 }
+
+void FunctionCallAST::dump(const int indentcount)
+{
+    printf("FunctionCall(name: %s\n", name.c_str());
+    indent(indentcount + 1);
+
+    puts("args: [");
+    for (auto &&i : args)
+    {
+        indent(indentcount + 2);
+        i->dump(indentcount + 2);
+    }
+    indent(indentcount + 1);
+    puts("]");
+    indent(indentcount);
+    puts(")");
+}

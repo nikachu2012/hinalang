@@ -121,6 +121,44 @@ BaseAST *parser::parseFactor()
             BaseAST *value = parseExpr1();
             return new AssignAST(tempName, value);
         }
+        else if (factor == lexer::LEXER_TYPE::LEFT_BRACKET)
+        {
+            // 関数呼び出し
+            std::vector<BaseAST *> arguments;
+
+            while (true)
+            {
+                factor = lex.lex();
+                // 引数なしの時
+                if (factor == lexer::LEXER_TYPE::RIGHT_BRACKET)
+                {
+                    break;
+                }
+                else
+                {
+                    lex.pbToken();
+                }
+
+                BaseAST *value = parseExpr1();
+                arguments.push_back(value);
+
+                factor = lex.lex();
+                if (factor == lexer::LEXER_TYPE::RIGHT_BRACKET)
+                {
+                    break;
+                }
+                else if (factor == lexer::LEXER_TYPE::COMMA)
+                {
+                    continue;
+                }
+                else
+                {
+                    Error::err("Expected ',' or ')'.");
+                }
+            }
+
+            return new FunctionCallAST(tempName, arguments);
+        }
         else
         {
             lex.pbToken();
