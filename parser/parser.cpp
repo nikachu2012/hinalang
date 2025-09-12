@@ -4,16 +4,60 @@ BaseAST *parser::parseExpr1()
 {
     BaseAST *lhs = parseExpr2();
 
-    // 仮でそのまま返すようにする
-    return lhs;
+    while (true)
+    {
+        lexer::LEXER_TYPE op = lex.lex();
+
+        if (op != lexer::LEXER_TYPE::OPERATOR)
+        {
+            lex.pbToken();
+            return lhs;
+        }
+
+        std::string opVal = lex.getBuf();
+        if (opVal == "<" || opVal == "<=" || opVal == ">" || opVal == ">=" || opVal == "==" || opVal == "!=")
+        {
+            BaseAST *rhs = parseExpr2();
+            lhs = new EquationAST(lhs, rhs, opVal);
+
+            continue;
+        }
+        else
+        {
+            lex.pbToken();
+            return lhs;
+        }
+    }
 }
 
 BaseAST *parser::parseExpr2()
 {
     BaseAST *lhs = parseExpr3();
 
-    // 仮でそのまま返すようにする
-    return lhs;
+    while (true)
+    {
+        lexer::LEXER_TYPE op = lex.lex();
+
+        if (op != lexer::LEXER_TYPE::OPERATOR)
+        {
+            lex.pbToken();
+            return lhs;
+        }
+
+        std::string opVal = lex.getBuf();
+        if (opVal == "<<" || opVal == ">>")
+        {
+            BaseAST *rhs = parseExpr3();
+            lhs = new EquationAST(lhs, rhs, opVal);
+
+            continue;
+        }
+        else
+        {
+            lex.pbToken();
+            return lhs;
+        }
+    }
 }
 
 // expr3 = expr4 [ { "+" | "-" } expr4 ]*
