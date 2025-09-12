@@ -137,4 +137,28 @@ public:
 
     void dump(const int indentcount);
 };
+
+class BaseStatementAST
+{
+public:
+    BaseStatementAST() {}
+    virtual ~BaseStatementAST() {}
+
+    virtual void dump(const int indentcount);
+};
+
+class ExprStatementAST : public BaseStatementAST
+{
+public:
+    BaseAST *expr;
+
+    ExprStatementAST(BaseAST *expr) : expr(expr) {}
+    ~ExprStatementAST()
+    {
+        delete expr;
+    };
+
+    void dump(const int indentcount);
+};
+
 #endif

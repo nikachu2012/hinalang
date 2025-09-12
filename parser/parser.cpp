@@ -1,5 +1,42 @@
 #include "parser.hpp"
 
+BaseStatementAST *parser::parseStatement()
+{
+    lexer::LEXER_TYPE tempLex = lex.lex();
+
+    if (tempLex == lexer::LEXER_TYPE::KEYWORD && lex.getBuf() == "if")
+    {
+        // if statement
+    }
+    else if (tempLex == lexer::LEXER_TYPE::KEYWORD && lex.getBuf() == "while")
+    {
+        // while statement
+    }
+    else if (tempLex == lexer::LEXER_TYPE::KEYWORD && lex.getBuf() == "return")
+    {
+        // return statement
+    }
+    else
+    {
+        // expr statement
+        lex.pbToken();
+
+        BaseAST *expr = parseExpr1();
+
+        // 式の次がセミコロンかチェック
+        if (lex.lex() == lexer::LEXER_TYPE::SEMICOLON)
+        {
+            return new ExprStatementAST(expr);
+        }
+        else
+        {
+            Error::err("Missing semicolon.");
+        }
+    }
+
+    return nullptr;
+}
+
 BaseAST *parser::parseExpr1()
 {
     BaseAST *lhs = parseExpr2();
@@ -235,8 +272,10 @@ BaseAST *parser::parseFactor()
 
 void parser::parseProgram()
 {
-    BaseAST *program = parseExpr3();
-
-    // program.dump(0);
-    program->dump(0);
+    while (lex.lex() != lexer::LEXER_TYPE::END)
+    {
+        lex.pbToken();
+        
+        parseStatement()->dump(0);
+    }
 }
