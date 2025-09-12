@@ -94,3 +94,20 @@ void BlockAST::dump(int indentcount)
     indent(indentcount);
     puts("]");
 }
+
+void IfStatementAST::dump(const int indentcount)
+{
+    printf("If(condition: ");
+    condition->dump(indentcount + 1);
+
+    indent(indentcount + 1);
+    printf("true: ");
+    block->dump(indentcount + 1);
+
+    indent(indentcount + 1);
+    printf("false: ");
+    elseBlock->dump(indentcount + 1);
+
+    indent(indentcount);
+    puts(")");
+}

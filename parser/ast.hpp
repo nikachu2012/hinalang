@@ -178,4 +178,23 @@ public:
     void dump(const int indentcount);
 };
 
+class IfStatementAST : public BaseStatementAST
+{
+public:
+    BaseAST *condition;
+    BlockAST *block;
+    BlockAST *elseBlock;
+
+    IfStatementAST(BaseAST *condition, BlockAST *block, BlockAST *elseBlock)
+        : condition(condition), block(block), elseBlock(elseBlock) {}
+    ~IfStatementAST()
+    {
+        delete condition;
+        delete block;
+        delete elseBlock;
+    }
+
+    void dump(const int indentcount);
+};
+
 #endif
