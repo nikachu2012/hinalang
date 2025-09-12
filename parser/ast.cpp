@@ -72,3 +72,13 @@ void FunctionCallAST::dump(const int indentcount)
     indent(indentcount);
     puts(")");
 }
+
+void BaseStatementAST::dump(const int indentcount)
+{
+    puts("!!!BaseStatement()");
+}
+
+void ExprStatementAST::dump(const int indentcount)
+{
+    expr->dump(indentcount);
+}
