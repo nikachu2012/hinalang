@@ -14,6 +14,7 @@ class parser
 private:
     lexer &lex;
 
+    BlockAST *parseBlock();
     BaseStatementAST *parseStatement();
 
     BaseAST *parseExpr1();

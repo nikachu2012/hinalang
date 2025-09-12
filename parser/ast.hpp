@@ -161,4 +161,21 @@ public:
     void dump(const int indentcount);
 };
 
+class BlockAST
+{
+public:
+    std::vector<BaseStatementAST *> statements;
+
+    BlockAST(std::vector<BaseStatementAST *> statements) : statements(statements) {};
+    ~BlockAST()
+    {
+        for (auto &&i : statements)
+        {
+            delete i;
+        }
+    };
+
+    void dump(const int indentcount);
+};
+
 #endif
