@@ -44,10 +44,23 @@ BaseStatementAST *parser::parseStatement()
     else if (tempLex == lexer::LEXER_TYPE::KEYWORD && lex.getBuf() == "while")
     {
         // while statement
+        BaseAST *condition = parseExpr1();
+        BlockAST *block = parseBlock();
+
+        return new WhileStatementAST(condition, block);
     }
     else if (tempLex == lexer::LEXER_TYPE::KEYWORD && lex.getBuf() == "return")
     {
         // return statement
+        BaseAST *expr = parseExpr1();
+
+        if (lex.lex() != lexer::LEXER_TYPE::SEMICOLON)
+        {
+            /* code */
+            Error::err("Expected ';'");
+        }
+
+        return new ReturnStatementAST(expr);
     }
     else
     {
