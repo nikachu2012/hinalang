@@ -197,4 +197,34 @@ public:
     void dump(const int indentcount);
 };
 
+class WhileStatementAST : public BaseStatementAST
+{
+public:
+    BaseAST *condition;
+    BlockAST *block;
+
+    WhileStatementAST(BaseAST *condition, BlockAST *block)
+        : condition(condition), block(block) {};
+    ~WhileStatementAST()
+    {
+        delete condition;
+        delete block;
+    }
+
+    void dump(const int indentcount);
+};
+
+class ReturnStatementAST : public BaseStatementAST
+{
+public:
+    BaseAST *expr; // nullable pointer
+
+    ReturnStatementAST(BaseAST *expr) : expr(expr) {}
+    ~ReturnStatementAST()
+    {
+        delete expr;
+    }
+
+    void dump(const int indentcount);
+};
 #endif

@@ -111,3 +111,31 @@ void IfStatementAST::dump(const int indentcount)
     indent(indentcount);
     puts(")");
 }
+
+void WhileStatementAST::dump(const int indentcount)
+{
+    printf("While(condition: ");
+    condition->dump(indentcount + 1);
+
+    indent(indentcount + 1);
+    printf("block: ");
+    block->dump(indentcount + 1);
+
+    indent(indentcount);
+    puts(")");
+}
+
+void ReturnStatementAST::dump(const int indentcount)
+{
+    printf("Return(expr: ");
+    if (expr == nullptr)
+    {
+        puts("(void return)");
+    }
+    else
+    {
+        expr->dump(indentcount + 1);
+    }
+    indent(indentcount);
+    puts(")");
+}
