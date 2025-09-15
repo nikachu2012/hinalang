@@ -70,6 +70,10 @@ BaseStatementAST *parser::parseStatement()
 
         return new ReturnStatementAST(expr);
     }
+    else if (tempLex == lexer::LEXER_TYPE::KEYWORD && lex.getBuf() == "fn")
+    {
+        return parseFunctionDef();
+    }
     else
     {
         // expr statement
@@ -89,6 +93,90 @@ BaseStatementAST *parser::parseStatement()
     }
 
     return nullptr;
+}
+
+FunctionDefineAST *parser::parseFunctionDef()
+{
+    // "fn"はすでに読まれたものとする
+
+    if (lex.lex() != lexer::LEXER_TYPE::KEYWORD)
+    {
+        Error::err("Expected function name.");
+    }
+    std::string funcName = lex.getBuf();
+
+    if (lex.lex() != lexer::LEXER_TYPE::LEFT_BRACKET)
+    {
+        Error::err("Expected '('");
+    }
+
+    std::map<std::string, std::string> arguments;
+    while (true)
+    {
+        lexer::LEXER_TYPE lexx = lex.lex();
+        if (lexx == lexer::LEXER_TYPE::RIGHT_BRACKET)
+        {
+            break;
+        }
+
+        // declare-argument = keyword keyword [ "," keyword keyword ]*
+        //                    ^^^^^^^^^^^^^^^
+        if (lexx != lexer::LEXER_TYPE::KEYWORD)
+        {
+            Error::err("Expected argument type.");
+        }
+        std::string argType = lex.getBuf();
+        if (lex.lex() != lexer::LEXER_TYPE::KEYWORD)
+        {
+            Error::err("Expected argument name.");
+        }
+        std::string argName = lex.getBuf();
+
+        // argumentsに値を書き込み
+        if (!arguments.insert({argName, argType}).second)
+        {
+            // argumentsに挿入できなかったとき
+            Error::err("Argument \"%s\" is already exist.", argName.c_str());
+        }
+        
+        lexx = lex.lex();
+        if (lexx == lexer::LEXER_TYPE::RIGHT_BRACKET)
+        {
+            break;
+        }
+        else if (lexx == lexer::LEXER_TYPE::COMMA)
+        {
+            continue;
+        }
+        else
+        {
+            Error::err("Expected ','.");
+        }
+    }
+
+    // "fn" keyword "(" declare-argument ")" "->" keyword block
+    //                                       ^^^^
+    if (lex.lex() != lexer::LEXER_TYPE::RIGHT_ARROW)
+    {
+        Error::err("Expected '->'.");
+    }
+
+    if (lex.lex() != lexer::LEXER_TYPE::KEYWORD)
+    {
+        Error::err("Expected return type.");
+    }
+    std::string retType = lex.getBuf();
+
+    if (lex.lex() == lexer::LEXER_TYPE::SEMICOLON)
+    {
+        return new FunctionDefineAST(funcName, retType, arguments, nullptr);
+    }
+    else
+    {
+        lex.pbToken();
+        BlockAST *block = parseBlock();
+        return new FunctionDefineAST(funcName, retType, arguments, block);
+    }
 }
 
 BaseAST *parser::parseExpr1()

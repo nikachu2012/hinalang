@@ -139,3 +139,39 @@ void ReturnStatementAST::dump(const int indentcount)
     indent(indentcount);
     puts(")");
 }
+
+void FunctionDefineAST::dump(const int indentcount)
+{
+    puts("FunctionDef(");
+
+    indent(indentcount + 1);
+    printf("name: %s\n", name.c_str());
+
+    indent(indentcount + 1);
+    printf("retType: %s\n", returnType.c_str());
+
+    // print argument-list
+    indent(indentcount + 1);
+    puts("args: [");
+    for (auto &x : arguments)
+    {
+        indent(indentcount + 2);
+        printf("Arg(type: %s, name: %s)\n", x.second.c_str(), x.first.c_str());
+    }
+    indent(indentcount + 1);
+    puts("]");
+
+    indent(indentcount + 1);
+    printf("statements: ");
+
+    if (block != nullptr)
+    {
+        block->dump(indentcount + 1);
+    }
+    else{
+        puts("");
+    }
+
+    indent(indentcount);
+    puts(")");
+}
