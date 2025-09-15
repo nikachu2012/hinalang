@@ -5,6 +5,7 @@
 #include <string>
 #include <typeinfo>
 #include <vector>
+#include <map>
 
 #include "../error/error.hpp"
 
@@ -223,6 +224,26 @@ public:
     ~ReturnStatementAST()
     {
         delete expr;
+    }
+
+    void dump(const int indentcount);
+};
+
+class FunctionDefineAST : public BaseStatementAST
+{
+public:
+    std::string name;
+    // keyは引数名
+    std::string returnType;
+    std::map<std::string, std::string> arguments;
+    BlockAST *block; // nullable pointer
+
+    FunctionDefineAST(std::string name, std::string returnType,
+                      std::map<std::string, std::string> arguments, BlockAST *block)
+        : name(name), returnType(returnType), arguments(arguments), block(block) {}
+    ~FunctionDefineAST()
+    {
+        delete block;
     }
 
     void dump(const int indentcount);
