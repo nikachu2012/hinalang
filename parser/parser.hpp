@@ -17,6 +17,8 @@ private:
     BlockAST *parseBlock();
     BaseStatementAST *parseStatement();
 
+    FunctionDefineAST *parseFunctionDef();
+
     BaseAST *parseExpr1();
     BaseAST *parseExpr2();
     BaseAST *parseExpr3();
