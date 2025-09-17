@@ -248,4 +248,18 @@ public:
 
     void dump(const int indentcount);
 };
+
+class ProgramAST
+{
+public:
+    BlockAST *block;
+
+    ProgramAST(BlockAST *block) : block(block) {}
+    ~ProgramAST()
+    {
+        delete block;
+    }
+
+    void dump(const int indentcount);
+};
 #endif

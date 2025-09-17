@@ -412,12 +412,17 @@ BaseAST *parser::parseFactor()
     return new BaseAST();
 }
 
-void parser::parseProgram()
+ProgramAST *parser::parseProgram()
 {
-    while (lex.lex() != lexer::LEXER_TYPE::END)
+    BlockAST *block = new BlockAST({});
+
+    lexer::LEXER_TYPE lexx;
+    while ((lexx = lex.lex()) != lexer::LEXER_TYPE::END)
     {
         lex.pbToken();
-
-        parseStatement()->dump(0);
+        BaseStatementAST *stmt = parseStatement();
+        block->statements.push_back(stmt);
     }
+
+    return new ProgramAST(block);
 }

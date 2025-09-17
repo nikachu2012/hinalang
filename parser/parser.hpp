@@ -29,7 +29,7 @@ public:
     parser(lexer &lex) : lex(lex) {}
     ~parser() {}
 
-    void parseProgram();
+    ProgramAST *parseProgram();
 };
 
 #endif
