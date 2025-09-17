@@ -175,3 +175,15 @@ void FunctionDefineAST::dump(const int indentcount)
     indent(indentcount);
     puts(")");
 }
+
+void ProgramAST::dump(const int indentcount)
+{
+    puts("Program(");
+
+    indent(indentcount + 1);
+    printf("block: ");
+    block->dump(indentcount + 1);
+
+    indent(indentcount);
+    puts(")");
+}

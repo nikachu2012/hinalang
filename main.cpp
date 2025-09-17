@@ -16,8 +16,8 @@ int main(void)
     lexer lex(f);
 
     parser par(lex);
-    par.parseProgram();
-
+    ProgramAST *program = par.parseProgram();
+    program->dump(0);
     // lexer::LEXER_TYPE type;
     // while ((type = lex.lex()) != lexer::LEXER_TYPE::END)
     // {
