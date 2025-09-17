@@ -1,0 +1,29 @@
+#ifndef GENIR_H_
+#define GENIR_H_
+
+#include "../parser/ast.hpp"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/IRBuilder.h"
+
+class genIR
+{
+private:
+    llvm::LLVMContext context;
+    llvm::Module *module;
+    llvm::IRBuilder<> builder;
+
+public:
+    genIR() : builder(context)
+    {
+        module = new llvm::Module("main", context);
+    }
+    ~genIR()
+    {
+        delete module;
+    }
+
+    void generate(ProgramAST *t);
+};
+
+#endif
