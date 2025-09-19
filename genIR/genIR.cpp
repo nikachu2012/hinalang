@@ -91,6 +91,7 @@ void genIR::generateBlock(BlockAST *blk, VARIABLE_TABLE vt)
     {
         if (ExprStatementAST *ex = dynamic_cast<ExprStatementAST *>(st))
         {
+            generateExpr(ex->expr, vt);
         }
         else if (IfStatementAST *ifs = dynamic_cast<IfStatementAST *>(st))
         {
@@ -111,6 +112,36 @@ void genIR::generateBlock(BlockAST *blk, VARIABLE_TABLE vt)
             Error::err("Unexpected statement type.");
         }
     }
+}
+
+llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
+{
+    if (EquationAST *eq = dynamic_cast<EquationAST *>(ex))
+    {
+    }
+    else if (ImmediateIntAST *imi = dynamic_cast<ImmediateIntAST *>(ex))
+    {
+    }
+    else if (VariableAST *va = dynamic_cast<VariableAST *>(ex))
+    {
+    }
+    else if (ImmediateStringAST *ims = dynamic_cast<ImmediateStringAST *>(ex))
+    {
+    }
+    else if (DefineVariableAST *defv = dynamic_cast<DefineVariableAST *>(ex))
+    {
+    }
+    else if (AssignAST *as = dynamic_cast<AssignAST *>(ex))
+    {
+    }
+    else if (FunctionCallAST *fnc = dynamic_cast<FunctionCallAST *>(ex))
+    {
+    }
+    else
+    {
+        Error::err("Unexpected expr type.");
+    }
+    return nullptr;
 }
 
 void genIR::generate(ProgramAST *t)
