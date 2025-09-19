@@ -8,6 +8,8 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/IRBuilder.h"
 
+typedef std::map<std::string, llvm::AllocaInst *> VARIABLE_TABLE;
+
 class genIR
 {
 private:
@@ -20,6 +22,7 @@ private:
     llvm::Type *getType(std::string s);
 
     void generateFunction(FunctionDefineAST *fn);
+    void generateBlock(BlockAST *blk, VARIABLE_TABLE vt);
 
 public:
     genIR() : builder(context), functionTable()
