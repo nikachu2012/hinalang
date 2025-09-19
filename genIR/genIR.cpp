@@ -87,6 +87,30 @@ void genIR::generateFunction(FunctionDefineAST *fn)
 
 void genIR::generateBlock(BlockAST *blk, VARIABLE_TABLE vt)
 {
+    for (auto &&st : blk->statements)
+    {
+        if (ExprStatementAST *ex = dynamic_cast<ExprStatementAST *>(st))
+        {
+        }
+        else if (IfStatementAST *ifs = dynamic_cast<IfStatementAST *>(st))
+        {
+        }
+        else if (WhileStatementAST *wh = dynamic_cast<WhileStatementAST *>(st))
+        {
+        }
+        else if (ReturnStatementAST *ret = dynamic_cast<ReturnStatementAST *>(st))
+        {
+        }
+        else if (dynamic_cast<FunctionDefineAST *>(st))
+        {
+            // ブロック内での関数定義はできないようにする
+            Error::err("Function definitions are not allowed inside a block.");
+        }
+        else
+        {
+            Error::err("Unexpected statement type.");
+        }
+    }
 }
 
 void genIR::generate(ProgramAST *t)
