@@ -3,6 +3,7 @@
 
 #include "lexer/lexer.hpp"
 #include "parser/parser.hpp"
+#include "genIR/genIR.hpp"
 
 int main(void)
 {
@@ -17,14 +18,10 @@ int main(void)
 
     parser par(lex);
     ProgramAST *program = par.parseProgram();
-    program->dump(0);
-    // lexer::LEXER_TYPE type;
-    // while ((type = lex.lex()) != lexer::LEXER_TYPE::END)
-    // {
-    //     printf("%d %s\n", type, lex.getBuf().c_str());
-    // }
-
-
+    
+    genIR gen;
+    gen.generate(program);
+    gen.dumpIR();
 
     f.close();
 }
