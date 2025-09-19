@@ -24,6 +24,7 @@ public:
     }
 
     void generate(ProgramAST *t);
+    void dumpIR();
 };
 
 #endif
