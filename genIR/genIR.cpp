@@ -44,9 +44,11 @@ void genIR::generateFunction(FunctionDefineAST *fn)
 
     // 引数リストの生成
     std::vector<llvm::Type *> args;
+    std::vector<std::string> argsName;
     for (auto &&a : fn->arguments)
     {
         args.push_back(getType(a.second));
+        argsName.push_back(a.first);
     }
 
     // 関数の作成
@@ -64,8 +66,27 @@ void genIR::generateFunction(FunctionDefineAST *fn)
     else
     {
         // 通常の関数宣言の時
-        // あとで実装
+        // 関数にentryブロックを追加
+        llvm::BasicBlock *bEntry = llvm::BasicBlock::Create(context, "entry", function);
+        builder.SetInsertPoint(bEntry);
+
+        // 変数テーブルの作成
+        VARIABLE_TABLE vt;
+        for (size_t i = 0; i < args.size(); i++)
+        {
+            // 引数に来た値を持った変数を作る
+            llvm::AllocaInst *alloc = builder.CreateAlloca(function->getArg(i)->getType());
+            builder.CreateStore(function->getArg(i), alloc);
+
+            vt.insert({argsName[i], alloc});
+        }
+
+        generateBlock(fn->block, vt);
     }
+}
+
+void genIR::generateBlock(BlockAST *blk, VARIABLE_TABLE vt)
+{
 }
 
 void genIR::generate(ProgramAST *t)
