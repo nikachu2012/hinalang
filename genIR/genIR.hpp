@@ -24,6 +24,8 @@ private:
     void generateFunction(FunctionDefineAST *fn);
     void generateBlock(BlockAST *blk, VARIABLE_TABLE vt);
 
+    llvm::Value *generateExpr(BaseAST *ex, VARIABLE_TABLE &vt);
+
 public:
     genIR() : builder(context), functionTable()
     {
