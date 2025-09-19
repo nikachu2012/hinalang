@@ -1,6 +1,8 @@
 #ifndef GENIR_H_
 #define GENIR_H_
 
+#include <map>
+
 #include "../parser/ast.hpp"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
@@ -13,8 +15,14 @@ private:
     llvm::Module *module;
     llvm::IRBuilder<> builder;
 
+    std::map<std::string, llvm::Function *> functionTable;
+
+    llvm::Type *getType(std::string s);
+
+    void generateFunction(FunctionDefineAST *fn);
+
 public:
-    genIR() : builder(context)
+    genIR() : builder(context), functionTable()
     {
         module = new llvm::Module("main", context);
     }
