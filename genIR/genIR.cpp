@@ -133,6 +133,7 @@ llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
     }
     else if (DefineVariableAST *defv = dynamic_cast<DefineVariableAST *>(ex))
     {
+        return generateDefineVariable(defv, vt);
     }
     else if (AssignAST *as = dynamic_cast<AssignAST *>(ex))
     {
@@ -145,6 +146,27 @@ llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
         Error::err("Unexpected expr type.");
     }
     return nullptr;
+}
+
+llvm::Value *genIR::generateDefineVariable(DefineVariableAST *defv, VARIABLE_TABLE &vt)
+{
+    if (vt.find(defv->dest) != vt.end())
+    {
+        Error::err("Variable '%s' is already exist.", defv->dest.c_str());
+    }
+
+    llvm::Type *type = getType(defv->type);
+    llvm::AllocaInst *alloc = builder.CreateAlloca(type);
+    vt.insert({defv->dest, alloc});
+
+    // 変数に代入する値を取得
+    llvm::Value *value = generateExpr(defv->value, vt);
+
+    // 変数保存先に合わせて型を変更
+    llvm::Value *value2 = builder.CreateIntCast(value, type, true);
+    builder.CreateStore(value2, alloc);
+
+    return value2;
 }
 
 void genIR::generate(ProgramAST *t)
