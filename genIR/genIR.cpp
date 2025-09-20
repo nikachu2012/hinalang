@@ -118,6 +118,7 @@ llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
 {
     if (EquationAST *eq = dynamic_cast<EquationAST *>(ex))
     {
+        return generateEquation(eq, vt);
     }
     else if (ImmediateIntAST *imi = dynamic_cast<ImmediateIntAST *>(ex))
     {
@@ -146,6 +147,48 @@ llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
     {
         Error::err("Unexpected expr type.");
     }
+    return nullptr;
+}
+
+llvm::Value *genIR::generateEquation(EquationAST *eq, VARIABLE_TABLE &vt)
+{
+    llvm::Value *lhs = generateExpr(eq->lhs, vt);
+    llvm::Value *rhs = generateExpr(eq->rhs, vt);
+    rhs = builder.CreateIntCast(rhs, lhs->getType(), true);
+
+    if (eq->op == "+")
+    {
+        return builder.CreateAdd(lhs, rhs);
+    }
+    else if (eq->op == "-")
+    {
+        return builder.CreateSub(lhs, rhs);
+    }
+    else if (eq->op == "*")
+    {
+        return builder.CreateMul(lhs, rhs);
+    }
+    else if (eq->op == "/")
+    {
+        return builder.CreateSDiv(lhs, rhs);
+    }
+    else if (eq->op == "%")
+    {
+        return builder.CreateSRem(lhs, rhs);
+    }
+    else if (eq->op == "<<")
+    {
+        return builder.CreateShl(lhs, rhs);
+    }
+    else if (eq->op == ">>")
+    {
+        return builder.CreateAShr(lhs, rhs);
+    }
+    else
+    {
+        Error::err("Unexpected operator '%s'.", eq->op.c_str());
+    }
+
     return nullptr;
 }
 
