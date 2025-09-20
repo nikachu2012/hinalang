@@ -121,12 +121,15 @@ llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
     }
     else if (ImmediateIntAST *imi = dynamic_cast<ImmediateIntAST *>(ex))
     {
+        // 数値を64bitの10進数として解析
+        return builder.getInt(llvm::APInt(64, imi->value, 10));
     }
     else if (VariableAST *va = dynamic_cast<VariableAST *>(ex))
     {
     }
     else if (ImmediateStringAST *ims = dynamic_cast<ImmediateStringAST *>(ex))
     {
+        return builder.CreateGlobalString(ims->value);
     }
     else if (DefineVariableAST *defv = dynamic_cast<DefineVariableAST *>(ex))
     {
