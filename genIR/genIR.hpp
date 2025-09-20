@@ -18,11 +18,14 @@ private:
     llvm::IRBuilder<> builder;
 
     std::map<std::string, llvm::Function *> functionTable;
+    llvm::Function *processingFunc;
 
     llvm::Type *getType(std::string s);
 
     void generateFunction(FunctionDefineAST *fn);
     void generateBlock(BlockAST *blk, VARIABLE_TABLE vt);
+
+    void generateReturn(ReturnStatementAST *ret, VARIABLE_TABLE &vt);
 
     llvm::Value *generateExpr(BaseAST *ex, VARIABLE_TABLE &vt);
     llvm::Value *generateEquation(EquationAST *eq, VARIABLE_TABLE &vt);

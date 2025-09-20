@@ -57,6 +57,7 @@ void genIR::generateFunction(FunctionDefineAST *fn)
     llvm::Function *function = llvm::Function::Create(
         functionType, llvm::Function::ExternalLinkage, fn->name, module);
     functionTable.insert({fn->name, function});
+    processingFunc = function;
 
     if (fn->block == nullptr)
     {
@@ -101,6 +102,7 @@ void genIR::generateBlock(BlockAST *blk, VARIABLE_TABLE vt)
         }
         else if (ReturnStatementAST *ret = dynamic_cast<ReturnStatementAST *>(st))
         {
+            generateReturn(ret, vt);
         }
         else if (dynamic_cast<FunctionDefineAST *>(st))
         {
@@ -112,6 +114,32 @@ void genIR::generateBlock(BlockAST *blk, VARIABLE_TABLE vt)
             Error::err("Unexpected statement type.");
         }
     }
+}
+
+void genIR::generateReturn(ReturnStatementAST *ret, VARIABLE_TABLE &vt)
+{
+    llvm::Type *retType = processingFunc->getReturnType();
+
+    if (retType->isVoidTy() && ret->expr != nullptr)
+    {
+        // 戻り値がvoidで値を返している時
+        Error::err("void function '%s' should not return a value.", processingFunc->getName());
+    }
+    if (!retType->isVoidTy() && ret->expr == nullptr)
+    {
+        // 戻り値がvoidでないのに値を返していない時
+        Error::err("non-void function '%s' should return a value", processingFunc->getName());
+    }
+
+    if (ret->expr == nullptr)
+    {
+        builder.CreateRetVoid();
+        return;
+    }
+
+    llvm::Value *value = generateExpr(ret->expr, vt);
+    llvm::Value *value2 = builder.CreateIntCast(value, retType, true);
+    builder.CreateRet(value2);
 }
 
 llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
