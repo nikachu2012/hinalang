@@ -127,6 +127,7 @@ llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
     }
     else if (VariableAST *va = dynamic_cast<VariableAST *>(ex))
     {
+        return generateVariable(va, vt);
     }
     else if (ImmediateStringAST *ims = dynamic_cast<ImmediateStringAST *>(ex))
     {
@@ -190,6 +191,19 @@ llvm::Value *genIR::generateEquation(EquationAST *eq, VARIABLE_TABLE &vt)
     }
 
     return nullptr;
+}
+
+llvm::Value *genIR::generateVariable(VariableAST *va, VARIABLE_TABLE &vt)
+{
+    VARIABLE_TABLE::iterator var = vt.find(va->name);
+    if (var == vt.end())
+    {
+        Error::err("Variable '%s' is not defined.", va->name.c_str());
+    }
+
+    llvm::Value *value = builder.CreateLoad(
+        var->second->getAllocatedType(), var->second);
+    return value;
 }
 
 llvm::Value *genIR::generateDefineVariable(DefineVariableAST *defv, VARIABLE_TABLE &vt)
