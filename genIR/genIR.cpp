@@ -137,6 +137,7 @@ llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
     }
     else if (AssignAST *as = dynamic_cast<AssignAST *>(ex))
     {
+        return generateAssign(as, vt);
     }
     else if (FunctionCallAST *fnc = dynamic_cast<FunctionCallAST *>(ex))
     {
@@ -165,6 +166,21 @@ llvm::Value *genIR::generateDefineVariable(DefineVariableAST *defv, VARIABLE_TAB
     // 変数保存先に合わせて型を変更
     llvm::Value *value2 = builder.CreateIntCast(value, type, true);
     builder.CreateStore(value2, alloc);
+
+    return value2;
+}
+
+llvm::Value *genIR::generateAssign(AssignAST *as, VARIABLE_TABLE &vt)
+{
+    VARIABLE_TABLE::iterator var = vt.find(as->dest);
+    if (var == vt.end())
+    {
+        Error::err("Variable '%s' is not defined.", as->dest.c_str());
+    }
+
+    llvm::Value *value = generateExpr(as->value, vt);
+    llvm::Value *value2 = builder.CreateIntCast(value, var->second->getAllocatedType(), true);
+    builder.CreateStore(value2, var->second);
 
     return value2;
 }
