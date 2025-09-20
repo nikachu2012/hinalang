@@ -26,6 +26,7 @@ private:
 
     llvm::Value *generateExpr(BaseAST *ex, VARIABLE_TABLE &vt);
     llvm::Value *generateEquation(EquationAST *eq, VARIABLE_TABLE &vt);
+    llvm::Value *generateVariable(VariableAST *va, VARIABLE_TABLE &vt);
     llvm::Value *generateDefineVariable(DefineVariableAST *defv, VARIABLE_TABLE &vt);
     llvm::Value *generateAssign(AssignAST *as, VARIABLE_TABLE &vt);
 
