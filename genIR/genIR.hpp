@@ -51,6 +51,7 @@ public:
 
     void generate(ProgramAST *t);
     void dumpIR();
+    llvm::Module *getModule() { return module; }
 };
 
 #endif
