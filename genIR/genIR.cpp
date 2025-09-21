@@ -83,6 +83,12 @@ void genIR::generateFunction(FunctionDefineAST *fn)
         }
 
         generateBlock(fn->block, vt);
+
+        // verify function
+        if (llvm::verifyFunction(*function, &llvm::errs()))
+        {
+            Error::err("function '%s' verify failed.", fn->name.c_str());
+        }
     }
 }
 
