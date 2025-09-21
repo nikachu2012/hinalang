@@ -96,6 +96,7 @@ void genIR::generateBlock(BlockAST *blk, VARIABLE_TABLE vt)
         }
         else if (IfStatementAST *ifs = dynamic_cast<IfStatementAST *>(st))
         {
+            generateIf(ifs, vt);
         }
         else if (WhileStatementAST *wh = dynamic_cast<WhileStatementAST *>(st))
         {
@@ -114,6 +115,29 @@ void genIR::generateBlock(BlockAST *blk, VARIABLE_TABLE vt)
             Error::err("Unexpected statement type.");
         }
     }
+}
+
+void genIR::generateIf(IfStatementAST *ifs, VARIABLE_TABLE &vt)
+{
+    llvm::Value *condition = generateExpr(ifs->condition, vt);
+    condition = builder.CreateIntCast(condition, builder.getInt1Ty(), true);
+
+    llvm::BasicBlock *bThen = llvm::BasicBlock::Create(context, "then", processingFunc);
+    llvm::BasicBlock *bElse = llvm::BasicBlock::Create(context, "else", processingFunc);
+    llvm::BasicBlock *bEnd = llvm::BasicBlock::Create(context, "end", processingFunc);
+    builder.CreateCondBr(condition, bThen, bElse);
+
+    // generate then block
+    builder.SetInsertPoint(bThen);
+    generateBlock(ifs->block, vt);
+    builder.CreateBr(bEnd);
+
+    // generate else block
+    builder.SetInsertPoint(bElse);
+    generateBlock(ifs->elseBlock, vt);
+    builder.CreateBr(bEnd);
+
+    builder.SetInsertPoint(bEnd);
 }
 
 void genIR::generateReturn(ReturnStatementAST *ret, VARIABLE_TABLE &vt)
