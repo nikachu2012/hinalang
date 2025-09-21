@@ -8,6 +8,8 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Verifier.h"
+#include "llvm/Passes/PassBuilder.h"
+#include "llvm/Transforms/Utils/Mem2Reg.h"
 
 typedef std::map<std::string, llvm::AllocaInst *> VARIABLE_TABLE;
 
