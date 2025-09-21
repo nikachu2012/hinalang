@@ -32,6 +32,7 @@ private:
     llvm::Value *generateVariable(VariableAST *va, VARIABLE_TABLE &vt);
     llvm::Value *generateDefineVariable(DefineVariableAST *defv, VARIABLE_TABLE &vt);
     llvm::Value *generateAssign(AssignAST *as, VARIABLE_TABLE &vt);
+    llvm::Value *generateFunctionCall(FunctionCallAST *fnc, VARIABLE_TABLE &vt);
 
 public:
     genIR() : builder(context), functionTable()
