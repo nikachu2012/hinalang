@@ -26,6 +26,7 @@ private:
     void generateBlock(BlockAST *blk, VARIABLE_TABLE vt);
 
     void generateIf(IfStatementAST *ifs, VARIABLE_TABLE &vt);
+    void generateWhile(WhileStatementAST *wh, VARIABLE_TABLE &vt);
     void generateReturn(ReturnStatementAST *ret, VARIABLE_TABLE &vt);
 
     llvm::Value *generateExpr(BaseAST *ex, VARIABLE_TABLE &vt);
