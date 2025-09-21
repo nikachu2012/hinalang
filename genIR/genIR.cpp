@@ -214,6 +214,30 @@ llvm::Value *genIR::generateEquation(EquationAST *eq, VARIABLE_TABLE &vt)
     {
         return builder.CreateAShr(lhs, rhs);
     }
+    else if (eq->op == "==")
+    {
+        return builder.CreateICmpEQ(lhs, rhs);
+    }
+    else if (eq->op == "!=")
+    {
+        return builder.CreateICmpNE(lhs, rhs);
+    }
+    else if (eq->op == "<")
+    {
+        return builder.CreateICmpSLT(lhs, rhs);
+    }
+    else if (eq->op == "<=")
+    {
+        return builder.CreateICmpSLE(lhs, rhs);
+    }
+    else if (eq->op == ">")
+    {
+        return builder.CreateICmpSGT(lhs, rhs);
+    }
+    else if (eq->op == ">=")
+    {
+        return builder.CreateICmpSGE(lhs, rhs);
+    }
     else
     {
         Error::err("Unexpected operator '%s'.", eq->op.c_str());
