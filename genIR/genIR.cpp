@@ -100,6 +100,7 @@ void genIR::generateBlock(BlockAST *blk, VARIABLE_TABLE vt)
         }
         else if (WhileStatementAST *wh = dynamic_cast<WhileStatementAST *>(st))
         {
+            generateWhile(wh, vt);
         }
         else if (ReturnStatementAST *ret = dynamic_cast<ReturnStatementAST *>(st))
         {
@@ -136,6 +137,26 @@ void genIR::generateIf(IfStatementAST *ifs, VARIABLE_TABLE &vt)
     builder.SetInsertPoint(bElse);
     generateBlock(ifs->elseBlock, vt);
     builder.CreateBr(bEnd);
+
+    builder.SetInsertPoint(bEnd);
+}
+
+void genIR::generateWhile(WhileStatementAST *wh, VARIABLE_TABLE &vt)
+{
+    llvm::BasicBlock *bCond = llvm::BasicBlock::Create(context, "cond", processingFunc);
+    llvm::BasicBlock *bBody = llvm::BasicBlock::Create(context, "body", processingFunc);
+    llvm::BasicBlock *bEnd = llvm::BasicBlock::Create(context, "end", processingFunc);
+    builder.CreateBr(bCond);
+
+    // generate condition
+    builder.SetInsertPoint(bCond);
+    llvm::Value *expr = generateExpr(wh->condition, vt);
+    builder.CreateCondBr(expr, bBody, bEnd);
+
+    // generate body
+    builder.SetInsertPoint(bBody);
+    generateBlock(wh->block, vt);
+    builder.CreateBr(bCond);
 
     builder.SetInsertPoint(bEnd);
 }
