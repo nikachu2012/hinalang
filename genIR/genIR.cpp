@@ -89,6 +89,19 @@ void genIR::generateFunction(FunctionDefineAST *fn)
         {
             Error::err("function '%s' verify failed.", fn->name.c_str());
         }
+
+        // apply mem2reg
+        llvm::FunctionPassManager fpm;
+        llvm::ModuleAnalysisManager mam;
+        llvm::FunctionAnalysisManager fam;
+        llvm::PassBuilder PB;
+        PB.registerModuleAnalyses(mam);
+        PB.registerFunctionAnalyses(fam);
+
+        // add mem2reg
+        fpm.addPass(llvm::PromotePass());
+
+        fpm.run(*function, fam);
     }
 }
 
