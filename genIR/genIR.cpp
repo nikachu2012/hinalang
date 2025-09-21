@@ -171,6 +171,7 @@ llvm::Value *genIR::generateExpr(BaseAST *ex, VARIABLE_TABLE &vt)
     }
     else if (FunctionCallAST *fnc = dynamic_cast<FunctionCallAST *>(ex))
     {
+        return generateFunctionCall(fnc, vt);
     }
     else
     {
@@ -268,6 +269,26 @@ llvm::Value *genIR::generateAssign(AssignAST *as, VARIABLE_TABLE &vt)
     builder.CreateStore(value2, var->second);
 
     return value2;
+}
+
+llvm::Value *genIR::generateFunctionCall(FunctionCallAST *fnc, VARIABLE_TABLE &vt)
+{
+    auto func = functionTable.find(fnc->name);
+    if (func == functionTable.end())
+    {
+        Error::err("Function '%s' is not defined.", fnc->name.c_str());
+    }
+
+    std::vector<llvm::Value *> args;
+    for (size_t i = 0; i < fnc->args.size(); i++)
+    {
+        llvm::Value *value = generateExpr(fnc->args[i], vt);
+        llvm::Value *value2 = builder.CreateIntCast(
+            value, func->second->getArg(i)->getType(), true);
+        args.push_back(value2);
+    }
+
+    return builder.CreateCall(func->second, args);
 }
 
 void genIR::generate(ProgramAST *t)
