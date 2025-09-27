@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     llvm::InitializeAllAsmParsers();
     llvm::InitializeAllAsmPrinters();
 
-    llvm::Triple targetTriple = llvm::Triple(llvm::sys::getDefaultTargetTriple());
+    std::string targetTriple = llvm::sys::getDefaultTargetTriple();
     gen.getModule()->setTargetTriple(targetTriple);
 
     std::string error;
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
     if (!target)
     {
         llvm::errs() << error;
-        Error::err("can't lookup target (triple: %s)", targetTriple.str().c_str());
+        Error::err("can't lookup target (triple: %s)", targetTriple.c_str());
         return 1;
     }
 
