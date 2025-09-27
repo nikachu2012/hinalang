@@ -12,6 +12,7 @@
 #include "llvm/Target/TargetOptions.h"
 #include "llvm/TargetParser/Host.h"
 #include "llvm/IR/LegacyPassManager.h"
+#include "llvm/Config/llvm-config.h"
 
 llvm::cl::opt<std::string> inputSource(
     llvm::cl::Positional,
@@ -52,15 +53,19 @@ int main(int argc, char **argv)
     llvm::InitializeAllAsmParsers();
     llvm::InitializeAllAsmPrinters();
 
-    std::string targetTriple = llvm::sys::getDefaultTargetTriple();
-    gen.getModule()->setTargetTriple(targetTriple);
-
+    std::string targetTripleStr = llvm::sys::getDefaultTargetTriple();
+#if LLVM_VERSION_MAJOR < 21
+    gen.getModule()->setTargetTriple(targetTripleStr);
+#else
+    // llvm 21でもコンパイルできるように修正
+    gen.getModule()->setTargetTriple(llvm::Triple(targetTripleStr));
+#endif
     std::string error;
-    const llvm::Target *target = llvm::TargetRegistry::lookupTarget(targetTriple, error);
+    const llvm::Target *target = llvm::TargetRegistry::lookupTarget(targetTripleStr, error);
     if (!target)
     {
         llvm::errs() << error;
-        Error::err("can't lookup target (triple: %s)", targetTriple.c_str());
+        Error::err("can't lookup target (triple: %s)", targetTripleStr.c_str());
         return 1;
     }
 
@@ -68,8 +73,14 @@ int main(int argc, char **argv)
     std::string features = "";
 
     llvm::TargetOptions targetOpt;
+#if LLVM_VERSION_MAJOR < 21
     auto targetMachine = target->createTargetMachine(
-        targetTriple, cpu, features, targetOpt, llvm::Reloc::PIC_);
+        targetTripleStr, cpu, features, targetOpt, llvm::Reloc::PIC_);
+#else
+    // llvm 21でもコンパイルできるように修正
+    auto targetMachine = target->createTargetMachine(
+        llvm::Triple(targetTripleStr), cpu, features, targetOpt, llvm::Reloc::PIC_);
+#endif
     gen.getModule()->setDataLayout(targetMachine->createDataLayout());
 
     std::error_code errorCode;
