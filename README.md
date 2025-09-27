@@ -7,18 +7,22 @@ if-else文、while文が実装されています。
 
 ## sample source
 ```
-fn puts(ptr p) -> i32;
+// prototype declare
+fn puts(ptr c) -> i32;
 
-fn main() -> i64 {
-    puts("Hello world!");
+fn main() -> i32 {
+    puts("Hello, world!");
     return 0;
 }
 ```
 
 ## how to compile
-LLVM 20.1.6で動作確認しています。
+LLVM 21.1.6で動作確認しています。
 
 ```sh
+$ git clone https://github.com/nikachu2012/hinalang.git
+$ cd hinalang
 $ make
-$ ./a.out input -o output
+$ ./a.out -o helloworld.o sample/helloworld.hina
+$ clang -o helloworld helloworld.o
 ```
