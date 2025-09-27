@@ -1,0 +1,7 @@
+// prototype declare
+fn puts(ptr c) -> i32;
+
+fn main() -> i32 {
+    puts("Hello, world!");
+    return 0;
+}
